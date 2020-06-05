@@ -5,7 +5,6 @@ use nix::sys::socket::{SockAddr, VsockAddr};
 use libc;
 use std::pin::Pin;
 
-
 pub mod echo {
     tonic::include_proto!("grpc.examples.echo");
 }
@@ -66,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     Server::builder()
         .add_service(EchoServer::new(greeter))
-        .serve_with_incoming(listener.incoming().map_ok(vsock::VsockStream))
+        .serve_with_incoming(listener.incoming())
         .await?;
 
     Ok(())
