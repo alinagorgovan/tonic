@@ -110,6 +110,14 @@ path = "src/health/server.rs"
 name = "autoreload-server"
 path = "src/autoreload/server.rs"
 
+[[bin]]
+name = "vsock-client"
+path = "src/vsock/client.rs"
+
+[[bin]]
+name = "vsock-server"
+path = "src/vsock/server.rs"
+
 [dependencies]
 tonic = { path = "../tonic", features = ["tls"] }
 prost = "0.6"
@@ -137,6 +145,13 @@ pin-project = "0.4"
 # Health example
 tonic-health = { path = "../tonic-health" }
 listenfd = "0.3"
+# Vsock example
+nix = "0.15.0"
+tokio-vsock = "0.1.0"
+libc = "0.2.71"
+pin = "0.1.1"
+
+
 
 [build-dependencies]
 tonic-build = { path = "../tonic-build", features = ["prost"] }
