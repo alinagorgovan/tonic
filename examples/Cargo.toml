@@ -122,7 +122,7 @@ path = "src/vsock/server.rs"
 tonic = { path = "../tonic", features = ["tls"] }
 prost = "0.6"
 tokio = { version = "0.2", features = ["rt-threaded", "time", "stream", "fs", "macros", "uds"] }
-futures = { version = "0.3", default-features = false, features = ["alloc"] }
+futures = { version = "0.3"}
 async-stream = "0.2"
 tower = "0.3"
 # Required for routeguide
@@ -147,7 +147,7 @@ tonic-health = { path = "../tonic-health" }
 listenfd = "0.3"
 # Vsock example
 nix = "0.15.0"
-tokio-vsock = "0.1.0"
+tokio-vsock = { path = "../../tokio-vsock" }
 libc = "0.2.71"
 pin = "0.1.1"
 

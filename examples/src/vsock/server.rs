@@ -4,6 +4,8 @@ use tonic::{transport::Server, Request, Response, Status, Streaming};
 use nix::sys::socket::{SockAddr, VsockAddr};
 use libc;
 use std::pin::Pin;
+use futures::stream::TryStreamExt;
+
 
 pub mod echo {
     tonic::include_proto!("grpc.examples.echo");
@@ -55,7 +57,7 @@ impl Echo for EchoService {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let listen_port = 8000;
-    let listener = VsockListener::bind(&SockAddr::Vsock(VsockAddr::new(
+    let mut listener = VsockListener::bind(&SockAddr::Vsock(VsockAddr::new(
         libc::VMADDR_CID_ANY,
         listen_port,
     )))
@@ -65,7 +67,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     Server::builder()
         .add_service(EchoServer::new(greeter))
-        .serve_with_incoming(listener.incoming())
+        .serve_with_incoming(listener.incoming().map_ok(vsock::VsockStream))
         .await?;
 
     Ok(())

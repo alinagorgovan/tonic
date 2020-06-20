@@ -16,14 +16,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // We will ignore this uri because uds do not use it
     // if your connector does use the uri it will be provided
     // as the request to the `MakeConnection`.
-    let channel = Endpoint::try_from("lttp://[::]:50051")?
-        .connect_with_connector(service_fn(|_: Uri| {
+    let listen_port = 8000;
+    let cid = 3;
+    
+    let addr = SockAddr::Vsock(VsockAddr::new(
+        cid,
+        listen_port
+    ));
+       
+    let channel = Endpoint::try_from("http://[::]:50051")?
+        .connect_with_connector(service_fn(move |_: Uri| {
             // Connect to a vsock socket
-            let listen_port = 9000;
-            VsockStream::connect(&SockAddr::Vsock(VsockAddr::new(
-                libc::VMADDR_CID_ANY,
-                listen_port,
-            )))
+            VsockStream::connect(&addr)
+
         }))
         .await?;
 
